@@ -5,6 +5,8 @@
 -- integers:
 
 -- sort a list
+-- TODO The type needs to be specified here??
+sort :: [Integer] -> [Integer]
 sort []     = []
 sort (x:xs) = sort (filter (< x)  xs) ++ [x] ++ sort (filter (>= x) xs)
 
@@ -18,26 +20,40 @@ uniqify (x:y:rest) | x == y    =   uniqify (y:rest)
 makeSet = uniqify . sort
 -------------------------------------------------------------------------------
 isEmpty :: [Integer] -> Bool
-
+isEmpty xs
+  | xs == [] = True
+  | otherwise = False
 
 belongsTo :: Integer -> [Integer] -> Bool
+belongsTo x xs
+  | xs == [] = False
+  | x == head xs = True
+  | otherwise = (belongsTo x $ tail xs)
 
-
+-- TODO Output in the form of a set (unique and sorted) ?
 myInsert :: Integer -> [Integer] -> [Integer]
-
+myInsert x xs = makeSet $ xs ++ [x]
 
 myUnion :: [Integer] -> [Integer] -> [Integer]
+myUnion xs ys = makeSet $ xs ++ ys
 
-
+-- TODO Assumes input in form of set
 myIntersection :: [Integer] -> [Integer] -> [Integer]
+-- FIXME
+myIntersection = mySetIntersection $ makeSet xs makeSet ys
 
+mySetIntersection :: [Integer] -> [Integer] -> [Integer]
+mySetIntersection xs ys
+  | xs == [] || ys == [] = []
+  | head xs == head ys = [head xs] ++ mySetIntersection (tail xs) (tail ys)
+  | otherwise = mySetIntersection xs ys
 
-mySetDifference :: [Integer] -> [Integer] -> [Integer]
+-- mySetDifference :: [Integer] -> [Integer] -> [Integer]
 
 
 -- powerset without using foldr
-myPowerset :: [Integer] -> [[Integer]]
+-- myPowerset :: [Integer] -> [[Integer]]
 
 
 -- powerset using foldr
-myPowerset2 :: [Integer] -> [[Integer]]
+-- myPowerset2 :: [Integer] -> [[Integer]]
