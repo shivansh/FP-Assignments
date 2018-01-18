@@ -52,18 +52,18 @@ mySetIntersection xs ys
 
 
 -- powerset without using foldr
--- myPowerset :: [Integer] -> [[Integer]]
-
+myPowerset :: [Integer] -> [[Integer]]
+myPowerset = foldl (\acc x -> acc ++ [x]:map (++ [x]) acc) []
 
 -- powerset using foldr
 -- A verbose expansion of the function myPowerset2 -
--- appendAll appends an integer to every list in a list of lists
---      > appendAll :: Integer -> [[Integer]] -> [[Integer]]
---      > appendAll x = map (++ [x])
+-- prependAll prepends an integer to every list in a list of lists
+--      > prependAll :: Integer -> [[Integer]] -> [[Integer]]
+--      > prependAll x = map (x:)
 --
 --      > myPowerset2 :: [Integer] -> [[Integer]]
---      > myPowerset2 = foldl (\acc x -> acc ++ [x]:appendAll x acc) []
+--      > myPowerset2 = foldr (\x acc -> ([x]:prependAll x acc) ++ acc) []
 --
 -- TODO Add empty set.
 myPowerset2 :: [Integer] -> [[Integer]]
-myPowerset2 = foldl (\acc x -> acc ++ [x]:map (++ [x]) acc) []
+myPowerset2 = foldr (\x acc -> ([x]:map (x:) acc) ++ acc) []
