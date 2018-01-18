@@ -48,8 +48,11 @@ mySetIntersection xs ys
   | head xs == head ys = [head xs] ++ mySetIntersection (tail xs) (tail ys)
   | otherwise = mySetIntersection xs ys
 
--- mySetDifference :: [Integer] -> [Integer] -> [Integer]
-
+mySetDifference :: [Integer] -> [Integer] -> [Integer]
+mySetDifference xs ys
+  | ys == [] = xs
+  | head xs == head ys = mySetDifference (tail xs) (tail ys)
+  | otherwise = head xs : mySetDifference (tail xs) (tail ys)
 
 -- powerset without using foldr
 myPowerset :: [Integer] -> [[Integer]]
