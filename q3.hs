@@ -28,7 +28,7 @@ belongsTo :: Integer -> [Integer] -> Bool
 belongsTo x xs
   | xs == [] = False
   | x == head xs = True
-  | otherwise = (belongsTo x $ tail xs)
+  | otherwise = belongsTo x $ tail xs
 
 -- TODO Output in the form of a set (unique and sorted) ?
 myInsert :: Integer -> [Integer] -> [Integer]
@@ -40,7 +40,7 @@ myUnion xs ys = makeSet $ xs ++ ys
 -- TODO Assumes input in form of set
 myIntersection :: [Integer] -> [Integer] -> [Integer]
 -- FIXME
-myIntersection = mySetIntersection $ makeSet xs makeSet ys
+myIntersection = mySetIntersection
 
 mySetIntersection :: [Integer] -> [Integer] -> [Integer]
 mySetIntersection xs ys
@@ -56,4 +56,11 @@ mySetIntersection xs ys
 
 
 -- powerset using foldr
--- myPowerset2 :: [Integer] -> [[Integer]]
+append :: Integer -> [Integer] -> [Integer]
+append x xs = xs ++ [x]
+
+foreach :: Integer -> [[Integer]] -> [[Integer]]
+foreach x xs = (map (append x) xs) ++ [[x]]
+
+myPowerset2 :: [Integer] -> [[Integer]]
+myPowerset2 = foldl (\acc x -> acc ++ foreach x acc) []
