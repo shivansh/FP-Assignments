@@ -5,7 +5,7 @@
 -- integers:
 
 -- sort a list
--- TODO The type needs to be specified here??
+-- TODO Error in makeSet when type is not specified (Eq /= Ord)
 sort :: [Integer] -> [Integer]
 sort []     = []
 sort (x:xs) = sort (filter (< x)  xs) ++ [x] ++ sort (filter (>= x) xs)
@@ -24,49 +24,45 @@ isEmpty xs
   | xs == []  = True
   | otherwise = False
 
+
+-- TODO Stop at first match.
 belongsTo :: Integer -> [Integer] -> Bool
 belongsTo x xs
-  | xset == []     = False
-  | x == head xset = True
-  | otherwise = belongsTo x $ tail xset
-  where xset = makeSet xs
+  | [ y | y <- makeSet xs, x == y ] == [] = False
+  | otherwise = True
+
 
 -- TODO Output in the form of a set (unique and sorted) ?
 myInsert :: Integer -> [Integer] -> [Integer]
-myInsert x xs = makeSet $ xs ++ [x]
+myInsert x xs = makeSet $ x:xs
+
 
 myUnion :: [Integer] -> [Integer] -> [Integer]
 myUnion xs ys = makeSet $ xs ++ ys
 
+
 myIntersection :: [Integer] -> [Integer] -> [Integer]
-myIntersection xs ys
-  | xset == [] || yset == [] = []
-  | xhead == yhead           = [xhead] ++ myIntersection xtail ytail
-  | otherwise                = myIntersection xtail ytail
-  where xset = makeSet xs
-        yset = makeSet ys
-        xtail = tail xset
-        xhead = head xset
-        ytail = tail yset
-        yhead = head yset
+myIntersection xs ys = makeSet [ x | x <- xs, y <- ys, x == y ]
+
 
 mySetDifference :: [Integer] -> [Integer] -> [Integer]
 mySetDifference xs ys
-  | xset == [] = []
-  | yset == [] = xset
-  | xhead == yhead = mySetDifference xtail ytail
-  | otherwise = xhead : mySetDifference xtail ytail
-  where xset = makeSet xs
-        yset = makeSet ys
-        xtail = tail xset
-        xhead = head xset
-        ytail = tail yset
-        yhead = head yset
+  | xs == [] = []
+  | ys == [] = xs
+  | [ y | y <- ys, xhead == y ] == [] = xhead : mySetDifference xtail ys
+  | otherwise = mySetDifference xtail ys
+  where xhead = head xs
+        xtail = tail xs
+
 
 -- powerset without using foldr
+-- TODO Avoid using extra function.
 myPowerset :: [Integer] -> [[Integer]]
-myPowerset xs = foldl (\acc x -> acc ++ [x]:map (++ [x]) acc) [] $ makeSet xs
--- myPowerset xs =
+myPowerset xs = [] : myPowersetl xs
+
+myPowersetl :: [Integer] -> [[Integer]]
+myPowersetl xs = foldl (\acc x -> acc ++ [x]:map (++ [x]) acc) [] $ makeSet xs
+
 
 -- powerset using foldr
 -- A verbose expansion of the function myPowerset2 -
@@ -77,6 +73,9 @@ myPowerset xs = foldl (\acc x -> acc ++ [x]:map (++ [x]) acc) [] $ makeSet xs
 --      > myPowerset2 :: [Integer] -> [[Integer]]
 --      > myPowerset2 = foldr (\x acc -> ([x]:prependAll x acc) ++ acc) []
 --
--- TODO Add empty set.
+-- TODO Avoid using extra function.
 myPowerset2 :: [Integer] -> [[Integer]]
-myPowerset2 xs = foldr (\x acc -> ([x]:map (x:) acc) ++ acc) [] $ makeSet xs
+myPowerset2 xs = [] : myPowersetr xs
+
+myPowersetr :: [Integer] -> [[Integer]]
+myPowersetr xs = foldr (\x acc -> ([x]:map (x:) acc) ++ acc) [] $ makeSet xs
