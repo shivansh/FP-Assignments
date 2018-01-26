@@ -24,5 +24,6 @@ setChange :: Int -> [Int] -> [Int]
 setChange d [] = []
 setChange d (x:xs)
   | d-x == 0 = [x]
-  | d-x < 0 || null (setChange (d-x) (x:xs)) = setChange d xs
-  | otherwise = x : setChange (d-x) (x:xs)  -- TODO avoid same recursive calls twice
+  | d-x < 0 || null result = setChange d xs
+  | otherwise = x : result
+  where result = setChange (d-x) (x:xs)
