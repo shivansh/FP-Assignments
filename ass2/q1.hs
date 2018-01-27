@@ -1,4 +1,4 @@
--- top level function must be called setChange
+-- top level function must be called coinChange
 -- use as many helper functions as necessary
 
 -- Main routine.
@@ -7,6 +7,7 @@ coinChange d xs = shortest (powerChange d xs)
 
 -- Find the shortest list from the list of lists.
 shortest :: [[Int]] -> [Int]
+shortest [] = []
 shortest [x] = x
 shortest (x:y:list)
   | length x < length y = shortest (x:list)
@@ -17,8 +18,10 @@ powerChange _ [] = []
 powerChange 0 _ = []
 powerChange d (x:xs) = foldl f [] (x:xs)
   where f acc y
-          | d-y >= 0 = map (y:) (setChange (d-y) (x:xs) : (powerChange (d-y) (x:xs))) ++ acc
+          | temp == [] = []
+          | d-y >= 0 = shortest (map (y:) (temp : (powerChange (d-y) xs))) : acc
           | otherwise = []
+          where temp = setChange (d-y) (x:xs)
 
 setChange :: Int -> [Int] -> [Int]
 setChange d [] = []
