@@ -3,7 +3,17 @@
 
 -- Main routine.
 coinChange :: Int -> [Int] -> [Int]
-coinChange d xs = shortest (powerChange d xs)
+coinChange d xs = newList (shortest (powerChange d xs)) xs
+
+-- Prints output in the expected format
+newList :: [Int] -> [Int] -> [Int]
+newList xs coins = [count y xs | y <- coins ]
+
+count :: Int -> [Int] -> Int
+count _ [] = 0
+count y (x:xs)
+  | y == x = 1 + count y xs
+  | otherwise = count y xs
 
 -- Find the shortest list from the list of lists.
 shortest :: [[Int]] -> [Int]
