@@ -3,25 +3,26 @@
 
 -- Main routine.
 coinChange :: Int -> [Int] -> [Int]
-coinChange d xs = newList (shortest (powerChange d xs)) xs
+coinChange d xs = newList xs $ shortest $ powerChange d xs
 
--- Prints output in the expected format
+-- Prints output in the expected format.
 newList :: [Int] -> [Int] -> [Int]
-newList xs coins = [count y xs | y <- coins ]
+newList coins xs = [ count y xs | y <- coins ]
 
+-- Count the occurrences of an integer in a list.
 count :: Int -> [Int] -> Int
-count _ [] = 0
-count y (x:xs)
-  | y == x = 1 + count y xs
-  | otherwise = count y xs
+count x = foldl f 0
+  where f acc y
+          | x == y = acc + 1
+          | otherwise = acc
 
 -- Find the shortest list from the list of lists.
 shortest :: [[Int]] -> [Int]
 shortest [] = []
-shortest [x] = x
-shortest (x:y:list)
-  | length x < length y = shortest (x:list)
-  | otherwise = shortest (y:list)
+shortest xss = foldl f (head xss) (tail xss)
+  where f acc xs
+          | length xs < length acc = xs
+          | otherwise = acc
 
 powerChange :: Int -> [Int] -> [[Int]]
 powerChange _ [] = []
